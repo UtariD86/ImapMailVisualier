@@ -1,0 +1,70 @@
+﻿@model ChatViewModel
+
+
+@if(Model.Emails != null && Model.Emails.Count > 0)
+{
+    <div class="title">
+    <span id="infoText"></span>
+    <script>
+            $(document).ready(function () {
+
+                    var titleemail = $('#emailAddress').val();
+
+                $('#infoText').text(titleemail);
+        
+            });
+    </script>
+    <br />
+    </div>
+    <img id="loading" style="height:50px; display:none" src="https://i.gifer.com/ZKZg.gif"></img>
+    foreach(var mail in Model.Emails)
+    {
+        @if (mail.IsIncoming)
+        {
+            <div style="margin-top:10px;" class="col-md-12 row ">
+
+                <div class="col-md-3 image-container button-log"><img src="@mail.FromAvatar"></img></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="col-md-8 mail-container">
+                    <div class="row">
+                        <div class="mail-name col-md-6"></div>
+                        <div class="mail-address col-md-6">@mail.Date</div>
+                    </div>
+                    <div class="row">
+                        <div class="mail-name col-md-4">@mail.FromName</div>
+                        <div class="col-md-2"></div>
+                        <div class="mail-address col-md-3">@mail.FromAddress</div>
+                    </div>
+                    <div class="title"><span>@mail.Subject</span></div>
+                    @Html.Raw(mail.Body)
+                </div>
+            </div>
+        }
+        @if (!mail.IsIncoming)
+        {
+            <div style="margin-top:10px;" class="col-md-12 row">
+                <div class="col-md-8 mail-container">
+                    <div class="row">
+                        <div class="mail-name col-md-6"></div>
+                        <div class="mail-address col-md-6">@mail.Date</div>
+                    </div>
+                    <div class="row">
+                        <div class="mail-name col-md-4">@mail.FromName</div>
+                        <div class="col-md-2"></div>
+                        <div class="mail-address col-md-3">@mail.FromAddress</div>
+                    </div>
+                    <div class="title"><span>@mail.Subject</span></div>
+                    @Html.Raw(mail.Body)
+                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="col-md-3 image-container button-log"><img src="@mail.FromAvatar"></img></div>
+            </div>
+        }
+    }
+}
+else
+{
+    <div class="title">
+    <span id="infoText">Hiç Mail Bulunamadı!</span>
+    <br />
+    <img id="loading" style="height:50px; display:none" src="https://i.gifer.com/ZKZg.gif"></img>
+    </div>
+}
