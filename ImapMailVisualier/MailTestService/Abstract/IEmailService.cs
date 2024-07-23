@@ -11,6 +11,8 @@ namespace MailTestService.Abstract
     public interface IEmailService
     {
         List<MimeMessage> FetchEmails();
+        Task<string> TransferToDB();
         List<EmailDto> GetEmailsByAddress(string address);
+        List<EmailDto> GetEmailsByAddressFromDb(string address);
     }
 }

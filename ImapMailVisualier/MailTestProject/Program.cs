@@ -1,23 +1,28 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using MimeKit;
-using System.Collections.Generic;
+using MailTestDataAccess.Context;
+using MailTestDataAccess.Repositories.Application.Concrete;
+using MailTestDataAccess.Repositories.Concrete;
+using MailTestDataAccess.Repositories;
+using MailTestDomain.Entities;
+using MailTestService;
+using MailTestService.Dtos;
+using Microsoft.EntityFrameworkCore;
 using MailTestService.Abstract;
 using MailTestService.Concrete;
-using MailTestService.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// EmailSettings'i konfigüre et
+#region DB SETTINGS
+builder.Services.AddDbContext<mailTestContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB")));
+#endregion
+#region Email Settings
 var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>();
 builder.Services.AddSingleton(emailSettings);
+#endregion
+builder.Services.LoadMyPersistanceServices(builder.Configuration);
 
-// EmailService baðýmlýlýðýný ekle
-builder.Services.AddScoped<IEmailService>(provider =>
-    new EmailService(emailSettings.Email, emailSettings.Password, emailSettings.ImapServer, emailSettings.ImapPort));
 
 var app = builder.Build();
 

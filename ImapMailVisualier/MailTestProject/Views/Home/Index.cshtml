@@ -3,30 +3,53 @@
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    // $(document).ready(function () {
 
-        function getViewComponent(address) {
-            var target = $("#chatContainer");
-            debugger;
-            $.get("/Email/GetEmails?email=" + address, function (data) {
-                target.html(data);
-            });
-        }
-
-
-        $('#fetchEmails').on('click', function () {
-            var email = $('#emailAddress').val();
-            if (email) {
-                $('#infoText').text('Yükleniyor...');
-                $("#loading").show();
-                getViewComponent(email);
-            } else {
-                alert('Please enter an email address.');
-            }
+    function getViewComponent(address, fromDb) {
+        var target = $("#chatContainer");
+        debugger;
+        $.get("/Email/GetEmails?email=" + address + "&fromDb=" + fromDb, function (data) {
+            target.html(data);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.error("Error: " + textStatus + ", " + errorThrown);
+            console.error("Response Text: " + jqXHR.responseText);
+            alert("An error occurred while fetching emails: " + textStatus + " - " + errorThrown);
         });
+    }
 
+    function getmails(fromDb) {
+        var address = $('#emailAddress').val();
+        if (address) {
+            $('#infoText').text('Yükleniyor...');
+            $("#loading").show();
+            getViewComponent(address, fromDb);
+        } else {
+            alert('Please enter an email address.');
+        }
+    }
 
-    });
+    function updateDatabase() {
+        $("#loadingDb").show();
+        debugger;
+        $.ajax({
+            url: "/Email/TransferEmails",
+            type: "POST",
+            success: function (data) {
+                $("#loadingDb").hide();
+                if (data.success) {
+                    alert("Success: " + data.message);
+                } else {
+                    alert("Error: " + data.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#loadingDb").hide();
+                alert("An error occurred: " + error);
+            }
+
+        });
+    }
+    // });
 </script>
 <style>
     .form {
@@ -53,14 +76,14 @@
         margin-bottom: 25px;
     }
 
-    .title span {
-        color: var(--font-color-sub);
-        font-weight: 600;
-        font-size: 17px;
-    }
+        .title span {
+            color: var(--font-color-sub);
+            font-weight: 600;
+            font-size: 17px;
+        }
 
     .input {
-        width: 250px;
+        width: 100%;
         height: 40px;
         border-radius: 5px;
         border: 2px solid var(--main-color);
@@ -73,14 +96,14 @@
         outline: none;
     }
 
-    .input::placeholder {
-        color: var(--font-color-sub);
-        opacity: 0.8;
-    }
+        .input::placeholder {
+            color: var(--font-color-sub);
+            opacity: 0.8;
+        }
 
-    .input:focus {
-        border: 2px solid var(--input-focus);
-    }
+        .input:focus {
+            border: 2px solid var(--input-focus);
+        }
 
     .login-with {
         display: flex;
@@ -100,11 +123,11 @@
         align-items: center;
     }
 
-    .button-log img {
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 50%;
-    }
+        .button-log img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
 
     .icon {
         width: 24px;
@@ -118,7 +141,7 @@
     }
 
     .button-confirm {
-        margin: 50px auto 0 auto;
+        margin: 0 auto 0 auto;
         border-radius: 5px;
         border: 2px solid var(--main-color);
         background-color: var(--bg-color);
@@ -127,6 +150,8 @@
         font-weight: 600;
         color: var(--font-color);
         cursor: pointer;
+        max-width: 40%;
+        padding: 5%;
     }
 
     .mail-container {
@@ -155,9 +180,9 @@
     }
 
     .image-container {
-        max-width:70px !important;
-        max-height:70px !important;
-        padding:unset !important;
+        max-width: 70px !important;
+        max-height: 70px !important;
+        padding: unset !important;
     }
 
     .mail-name {
@@ -172,11 +197,15 @@
 <div class="text-center">
     <div style="height: 80vh;" class="form row">
         <form class="col-md-4 form">
-            <div class="title"><span>Görüntülemek İstediğiniz Mail Adresini Giriniz</span></div>
+            <a onclick="updateDatabase()" style="max-width:90% !important" class="button-confirm">Veritabanını Güncelle  <img id="loadingDb" style="height:20px; display:none" src="https://i.gifer.com/ZKZg.gif"></img> </a>
+            <div class="title"><span>Görüntülemek İstediğiniz Mail Adresini Giriniz</span> </div>
             <input class="input" name="email" placeholder="Email" type="email" id="emailAddress">
             <div class="login-with">
-                <a id="fetchEmails" style="padding:10px;" class="button-confirm">Görüntüle →</a>
+                <a onclick="getmails(false)" class="button-confirm">Serverdan Görüntüle →</a>
+                <a onclick="getmails(true)" class="button-confirm">Db'den Görüntüle →</a>
             </div>
+            
+
         </form>
         <div style="overflow-y: scroll; height:100%">
             <div id="chatContainer" style="height:auto; padding-left: 5vw; padding-right:5vw; display: flex; align-items: center;" class="col-md-8 form">

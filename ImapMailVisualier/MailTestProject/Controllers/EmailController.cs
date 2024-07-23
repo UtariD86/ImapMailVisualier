@@ -12,10 +12,31 @@ namespace MailTestProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEmails(string email)
+        public IActionResult GetEmails(string email, bool fromDb)
         {
-            var emails = _emailService.GetEmailsByAddress(email);
-            return ViewComponent("Chat", new { emails = emails });
+            try
+            {
+                var emails = fromDb ? _emailService.GetEmailsByAddressFromDb(email) : _emailService.GetEmailsByAddress(email);
+                return ViewComponent("Chat", new { emails = emails });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
+        public async Task<IActionResult> TransferEmails()
+        {
+            try
+            {
+                var result = await _emailService.TransferToDB();
+                return Json(new { success = true, message = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
     }
 }

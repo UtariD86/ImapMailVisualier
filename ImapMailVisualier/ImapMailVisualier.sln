@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailTestProject", "MailTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailTestService", "MailTestService\MailTestService.csproj", "{9D586B85-46A1-467C-9FDF-8B839B83A571}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailTestDomain", "MailTestDomain\MailTestDomain.csproj", "{465B15FC-AD3F-416D-A30A-6F152569FA7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailTestDataAccess", "MailTestDataAccess\MailTestDataAccess.csproj", "{F0DC1BC8-6D48-459C-82AD-E4D7B73BB2C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{9D586B85-46A1-467C-9FDF-8B839B83A571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D586B85-46A1-467C-9FDF-8B839B83A571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D586B85-46A1-467C-9FDF-8B839B83A571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{465B15FC-AD3F-416D-A30A-6F152569FA7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{465B15FC-AD3F-416D-A30A-6F152569FA7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{465B15FC-AD3F-416D-A30A-6F152569FA7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{465B15FC-AD3F-416D-A30A-6F152569FA7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0DC1BC8-6D48-459C-82AD-E4D7B73BB2C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0DC1BC8-6D48-459C-82AD-E4D7B73BB2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0DC1BC8-6D48-459C-82AD-E4D7B73BB2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0DC1BC8-6D48-459C-82AD-E4D7B73BB2C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

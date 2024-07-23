@@ -5,7 +5,7 @@ namespace MailTestProject.ViewComponents
 {
     public class ChatViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(dynamic arguments)
+        public async Task<IViewComponentResult> InvokeAsync(dynamic arguments)
         {
             var model = new ChatViewModel();
             model.Emails = arguments.emails != null && arguments.emails.Count > 0 ? arguments.emails : null;
