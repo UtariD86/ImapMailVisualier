@@ -13,8 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace MailTestService.Concrete
@@ -159,7 +157,7 @@ namespace MailTestService.Concrete
                         FromAddress = e.From.Mailboxes.FirstOrDefault()?.Address ?? "",
                         To = e.To.Mailboxes.FirstOrDefault()?.Address ?? "",
                         Subject = e.Subject ?? "",
-                        MimeVersion = e.MimeVersion?.ToString() ?? "",
+                        MimeVersion = e.MimeVersion?.ToString()?? "",
                         ContentType = e.BodyParts.FirstOrDefault()?.ContentType?.ToString() ?? "",
                         XPriority = e.Headers["X-Priority"]?.ToString() ?? "",
                         XMSMailPriority = e.Headers["X-MSMail-Priority"]?.ToString() ?? "",
@@ -167,14 +165,14 @@ namespace MailTestService.Concrete
                         XMimeOLE = e.Headers["X-MimeOLE"]?.ToString() ?? "",
                         Date = e.Date.DateTime,
                         XRead = e.Headers["X-Read"] != null,
-                        BodyPlainText = EncodeHtml(e.BodyParts.OfType<TextPart>().FirstOrDefault(tp => tp.IsHtml == false)?.Text ?? ""),
-                        BodyHtml = EncodeHtml(e.BodyParts.OfType<TextPart>().FirstOrDefault(tp => tp.IsHtml == true)?.Text ?? ""),
+                        BodyPlainText = e.BodyParts.OfType<TextPart>().FirstOrDefault(tp => tp.IsHtml == false)?.Text ?? "",
+                        BodyHtml = e.BodyParts.OfType<TextPart>().FirstOrDefault(tp => tp.IsHtml == true)?.Text ?? "",
                         Attachments = e.Attachments != null ? string.Join(", ", e.Attachments.Select(a => a.ContentDisposition?.FileName ?? a.ContentType.ToString())) : "",
                         OwnerEmail = _email
                     }).ToList();
 
-                if (newEntities.Count < 1)
-                    return "Yeni E-posta bulunamadı";
+                if(newEntities.Count < 1 )
+                    return "Yeni E posta bulunamadı";
 
                 await _emailMessageRepository.BulkInsert(newEntities);
 
@@ -186,6 +184,7 @@ namespace MailTestService.Concrete
             }
         }
 
+
         private string GetAvatarUrl(string emailAddress)
         {
             if (string.IsNullOrEmpty(emailAddress))
@@ -196,13 +195,6 @@ namespace MailTestService.Concrete
             var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
 
             return $"https://www.gravatar.com/avatar/{hashString}";
-        }
-
-        public static string EncodeHtml(string html)
-        {
-            // HtmlEncoder sınıfı ile HTML içeriğini encode et
-            var encoder = HtmlEncoder.Create(allowedRanges: UnicodeRanges.All);
-            return encoder.Encode(html);
         }
     }
 }
